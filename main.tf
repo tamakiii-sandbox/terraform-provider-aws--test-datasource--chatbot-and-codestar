@@ -28,7 +28,7 @@ data "aws_s3_bucket" "codepipeline_artifact" {
 }
 
 resource "aws_iam_role" "chatbot" {
-  name = "${var.identifier}-ChatBot"
+  name               = "${var.identifier}-ChatBot"
   assume_role_policy = data.aws_iam_policy_document.chatbot_assume_role_policy.json
 
   tags = {
@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "chatbot_assume_role_policy" {
     actions = ["sts:AssumeRole"]
 
     principals {
-      type = "Service"
+      type        = "Service"
       identifiers = ["chatbot.amazonaws.com"]
     }
   }
@@ -213,8 +213,8 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
 }
 
 resource "aws_codestarnotifications_notification_rule" "codebuild" {
-  name     = "${var.identifier}-CodeBuild"
-  detail_type    = "BASIC"
+  name        = "${var.identifier}-CodeBuild"
+  detail_type = "BASIC"
   event_type_ids = [
     "codebuild-project-build-phase-failure",
     "codebuild-project-build-phase-success",
@@ -227,7 +227,7 @@ resource "aws_codestarnotifications_notification_rule" "codebuild" {
   resource = aws_codebuild_project.build.arn
 
   target {
-    type = "AWSChatbotSlack"
+    type    = "AWSChatbotSlack"
     address = aws_chatbot_slack_channel_configuration.channel.chat_configuration_arn
   }
 
