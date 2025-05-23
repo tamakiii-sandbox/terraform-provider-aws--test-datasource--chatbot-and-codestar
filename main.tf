@@ -170,7 +170,7 @@ resource "aws_codepipeline" "pipeline" {
   role_arn      = aws_iam_role.codepipeline.arn
 
   artifact_store {
-    location = data.aws_s3_bucket.codepipeline_artifact.arn
+    location = data.aws_s3_bucket.codepipeline_artifact.bucket
     type     = "S3"
   }
 
