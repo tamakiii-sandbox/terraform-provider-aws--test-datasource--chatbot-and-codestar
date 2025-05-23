@@ -131,7 +131,7 @@ resource "aws_codebuild_project" "build" {
   }
 
   environment {
-    type            = "LINUX_CONTAINER"
+    type            = "ARM_CONTAINER"
     compute_type    = "BUILD_GENERAL1_SMALL"
     image           = "aws/codebuild/amazonlinux-aarch64-standard:3.0"
     privileged_mode = false
