@@ -162,6 +162,10 @@ EOF
 resource "aws_codestarconnections_connection" "github" {
   name          = var.identifier
   provider_type = "GitHub"
+
+  tags = {
+    Name = var.identifier
+  }
 }
 
 resource "aws_codepipeline" "pipeline" {
