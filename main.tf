@@ -90,6 +90,15 @@ data "aws_iam_policy_document" "codepipeline" {
       "*" // TODO: fix me
     ]
   }
+
+  statement {
+    actions = [
+      "codestar-connections:UseConnection"
+    ]
+    resources = [
+      aws_codestarconnections_connection.github.arn
+    ]
+  }
 }
 
 resource "aws_iam_policy" "codepipeline" {
