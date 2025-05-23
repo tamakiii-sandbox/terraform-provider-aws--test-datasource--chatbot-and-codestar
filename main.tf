@@ -134,7 +134,7 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "*"
+      "*" # TODO: fix me: /aws/codebuild/TestDatasourceChatbotAndCodestar-Build
     ]
   }
 
