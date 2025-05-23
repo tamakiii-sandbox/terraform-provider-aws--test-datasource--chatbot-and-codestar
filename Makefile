@@ -1,4 +1,4 @@
-.PHONY: help check init plan clean
+.PHONY: help check init plan clean apply fmt
 
 export AWS_REGION
 export S3_BUCKET
@@ -21,6 +21,9 @@ clean:
 
 apply:
 	terraform apply tfplan
+
+fmt:
+	terraform fmt
 
 tfplan:
 	terraform plan -out $@
