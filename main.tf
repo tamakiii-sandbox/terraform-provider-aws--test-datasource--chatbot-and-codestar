@@ -212,6 +212,28 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
   }
 }
 
+resource "aws_codestarnotifications_notification_rule" "codebuild" {
+  name     = "${var.identifier}-CodeBuild"
+  detail_type    = "BASIC"
+  event_type_ids = [
+    "codebuild-project-build-phase-failure",
+    "codebuild-project-build-phase-success",
+    "codebuild-project-build-state-failed",
+    "codebuild-project-build-state-in-progress",
+    "codebuild-project-build-state-stopped",
+    "codebuild-project-build-state-succeeded",
+  ]
+
+  resource = aws_codebuild_project.build.arn
+
+  target {
+    type = "AWSChatbotSlack"
+    address = aws_chatbot_slack_channel_configuration.channel.chat_configuration_arn
+  }
+
+  tags = {}
+}
+
 resource "aws_codepipeline" "pipeline" {
   name          = "${var.identifier}-Pipeline"
   pipeline_type = "V2"
