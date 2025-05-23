@@ -1,4 +1,4 @@
-.PHONY: help check
+.PHONY: help check init plan clean
 
 export AWS_REGION
 export S3_BUCKET
@@ -13,8 +13,17 @@ check:
 init: state.config
 	terraform init -backend-config="$<"
 
-plan:
-	terraform plan
+plan: \
+	tfplan
+
+clean:
+	rm tfplan
+
+apply:
+	terraform apply tfplan
+
+tfplan:
+	terraform plan -out $@
 
 state.config: state.template.config
 	export COMMENT="This file was created by Makefile" && envsubst < $< > $@
