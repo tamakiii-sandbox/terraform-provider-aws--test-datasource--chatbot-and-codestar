@@ -17,7 +17,7 @@ plan: \
 	tfplan
 
 clean:
-	rm tfplan
+	-rm tfplan
 
 apply:
 	terraform apply tfplan
@@ -30,3 +30,6 @@ tfplan:
 
 state.config: state.template.config
 	export COMMENT="This file was created by Makefile" && envsubst < $< > $@
+
+.auto.tfvars.json:
+	echo '{"s3_codepipeline_artifact_arn": ""}' | jq -r > $@
