@@ -154,3 +154,34 @@ artifacts:
 EOF
   }
 }
+
+resource "aws_codepipeline" "pipeline" {
+  name = "${var.identifier}-Pipeline"
+  pipeline_type = "V2"
+  role_arn = aws_iam_role.codepipeline.arn
+
+  artifact_store {
+    location = data.aws_s3_bucket.codepipeline_artifact.arn
+    type = "S3"
+  }
+
+  stage {
+    name = "Build"
+
+    action {
+      name = "Build"
+
+      action {
+        name = "Build"
+        category = "Build"
+        owner = "AWS"
+        provider = "CodeBuild"
+        version = "1"
+
+        configuration = {
+          ProjectName = aws_codebuild_project.build.name
+        }
+      }
+    }
+  }
+}
