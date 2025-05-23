@@ -61,8 +61,8 @@ data "aws_iam_policy_document" "codepipeline" {
 }
 
 resource "aws_iam_policy" "codepipeline" {
-  name        = "${var.identifier}-CodePipeline"
-  policy      = data.aws_iam_policy_document.codepipeline.json
+  name   = "${var.identifier}-CodePipeline"
+  policy = data.aws_iam_policy_document.codepipeline.json
 }
 
 resource "aws_iam_role_policy_attachment" "codepipeline" {
@@ -71,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name = "${var.identifier}-CodeBuild"
+  name               = "${var.identifier}-CodeBuild"
   assume_role_policy = data.aws_iam_policy_document.codebuild_assume_role_policy.json
 }
 
@@ -112,8 +112,8 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 resource "aws_iam_policy" "codebuild" {
-  name        = "${var.identifier}-CodeBuild"
-  policy      = data.aws_iam_policy_document.codebuild.json
+  name   = "${var.identifier}-CodeBuild"
+  policy = data.aws_iam_policy_document.codebuild.json
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild" {
@@ -156,13 +156,13 @@ EOF
 }
 
 resource "aws_codepipeline" "pipeline" {
-  name = "${var.identifier}-Pipeline"
+  name          = "${var.identifier}-Pipeline"
   pipeline_type = "V2"
-  role_arn = aws_iam_role.codepipeline.arn
+  role_arn      = aws_iam_role.codepipeline.arn
 
   artifact_store {
     location = data.aws_s3_bucket.codepipeline_artifact.arn
-    type = "S3"
+    type     = "S3"
   }
 
   stage {
@@ -172,11 +172,11 @@ resource "aws_codepipeline" "pipeline" {
       name = "Build"
 
       action {
-        name = "Build"
+        name     = "Build"
         category = "Build"
-        owner = "AWS"
+        owner    = "AWS"
         provider = "CodeBuild"
-        version = "1"
+        version  = "1"
 
         configuration = {
           ProjectName = aws_codebuild_project.build.name
