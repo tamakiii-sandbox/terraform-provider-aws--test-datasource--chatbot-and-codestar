@@ -11,6 +11,10 @@ variable "s3_codepipeline_artifact_arn" {
   type = string
 }
 
+variable "github_repository" {
+  type = string
+}
+
 data "aws_s3_bucket" "codepipeline_artifact" {
   bucket = var.s3_codepipeline_artifact_arn
 }
@@ -155,6 +159,11 @@ EOF
   }
 }
 
+resource "aws_codestarconnections_connection" "github" {
+  name          = "${var.identifier}"
+  provider_type = "GitHub"
+}
+
 resource "aws_codepipeline" "pipeline" {
   name          = "${var.identifier}-Pipeline"
   pipeline_type = "V2"
@@ -166,21 +175,37 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   stage {
+    name = "Source"
+
+    action {
+      name             = "Source"
+      category         = "Source"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
+      version          = "1"
+      output_artifacts = ["source_output"]
+
+      configuration = {
+        ConnectionArn        = aws_codestarconnections_connection.github.arn
+        FullRepositoryId     = var.github_repository
+        BranchName           = "main"
+        OutputArtifactFormat = "CODE_ZIP"
+      }
+    }
+  }
+
+  stage {
     name = "Build"
 
     action {
-      name = "Build"
+      name     = "Build"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
 
-      action {
-        name     = "Build"
-        category = "Build"
-        owner    = "AWS"
-        provider = "CodeBuild"
-        version  = "1"
-
-        configuration = {
-          ProjectName = aws_codebuild_project.build.name
-        }
+      configuration = {
+        ProjectName = aws_codebuild_project.build.name
       }
     }
   }

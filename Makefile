@@ -32,4 +32,4 @@ state.config: state.template.config
 	export COMMENT="This file was created by Makefile" && envsubst < $< > $@
 
 .auto.tfvars.json:
-	echo '{"s3_codepipeline_artifact_arn": ""}' | jq -r > $@
+	echo '{"s3_codepipeline_artifact_arn": "", "github_repository": ""}' | jq -r > $@
