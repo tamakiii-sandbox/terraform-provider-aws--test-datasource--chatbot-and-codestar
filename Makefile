@@ -1,14 +1,10 @@
-.PHONY: help setup check-prerequisites
+.PHONY: help check
 
 help:
 	@cat $(firstword $(MAKEFILE_LIST))
 
-setup: \
-	check-prerequisites \
-	check-version
-
-check-prerequisites:
+check:
 	type tfenv
 
-check-version:
-	terraform --version
+plan:
+	terraform plan
