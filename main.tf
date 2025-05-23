@@ -120,3 +120,37 @@ resource "aws_iam_role_policy_attachment" "codebuild" {
   role       = aws_iam_role.codebuild.name
   policy_arn = aws_iam_policy.codebuild.arn
 }
+
+resource "aws_codebuild_project" "build" {
+  name          = "${var.identifier}-Build"
+  service_role  = aws_iam_role.codebuild.arn
+  build_timeout = "5"
+
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+
+  environment {
+    type            = "LINUX_CONTAINER"
+    compute_type    = "BUILD_GENERAL1_SMALL"
+    image           = "aws/codebuild/amazonlinux-aarch64-standard:3.0"
+    privileged_mode = false
+  }
+
+  source {
+    type      = "CODEPIPELINE"
+    buildspec = <<EOF
+version: 0.2
+phases:
+  build:
+    commands:
+      - echo "Hello, its $(date --rfc-3339=ns) here." | tee info.txt
+      - cat /etc/os-release | tee -a info.txt
+      - uname -a | tee -a info.txt
+artifacts:
+  files:
+    - info.txt
+  discard-paths: yes
+EOF
+  }
+}
