@@ -159,6 +159,7 @@ EOF
   }
 }
 
+// NOTE: You’ll need to replace this resource after the initial connection.
 resource "aws_codestarconnections_connection" "github" {
   name          = var.identifier
   provider_type = "GitHub"
