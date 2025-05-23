@@ -160,7 +160,7 @@ EOF
 }
 
 resource "aws_codestarconnections_connection" "github" {
-  name          = "${var.identifier}"
+  name          = var.identifier
   provider_type = "GitHub"
 }
 
@@ -198,11 +198,13 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-      name     = "Build"
-      category = "Build"
-      owner    = "AWS"
-      provider = "CodeBuild"
-      version  = "1"
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["build_output"]
 
       configuration = {
         ProjectName = aws_codebuild_project.build.name
