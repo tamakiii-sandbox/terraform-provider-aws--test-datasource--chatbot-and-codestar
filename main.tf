@@ -69,3 +69,18 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
   role       = aws_iam_role.codepipeline.name
   policy_arn = aws_iam_policy.codepipeline.arn
 }
+
+resource "aws_iam_role" "codebuild" {
+  name = "${var.identifier}-CodeBuild"
+  assume_role_policy = data.aws_iam_policy_document.codebuild_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "codebuild_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["codebuild.amazonaws.com"]
+    }
+  }
+}
