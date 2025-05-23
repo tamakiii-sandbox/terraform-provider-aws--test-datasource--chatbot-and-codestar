@@ -84,3 +84,39 @@ data "aws_iam_policy_document" "codebuild_assume_role_policy" {
     }
   }
 }
+
+data "aws_iam_policy_document" "codebuild" {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+      "s3:GetBucketVersioning",
+      "s3:PutObject",
+    ]
+    resources = [
+      "${data.aws_s3_bucket.codepipeline_artifact.arn}",
+      "${data.aws_s3_bucket.codepipeline_artifact.arn}/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "codebuild" {
+  name        = "${var.identifier}-CodeBuild"
+  policy      = data.aws_iam_policy_document.codebuild.json
+}
+
+resource "aws_iam_role_policy_attachment" "codebuild" {
+  role       = aws_iam_role.codebuild.name
+  policy_arn = aws_iam_policy.codebuild.arn
+}
