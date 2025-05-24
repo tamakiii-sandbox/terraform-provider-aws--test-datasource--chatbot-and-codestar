@@ -7,7 +7,7 @@ variable "identifier" {
   default = "TestDatasourceChatbotAndCodestar"
 }
 
-variable "s3_codepipeline_artifact_arn" {
+variable "s3_codepipeline_artifact_bucket" {
   type = string
 }
 
@@ -29,7 +29,7 @@ import {
 }
 
 data "aws_s3_bucket" "codepipeline_artifact" {
-  bucket = var.s3_codepipeline_artifact_arn
+  bucket = var.s3_codepipeline_artifact_bucket
 }
 
 resource "aws_cloudwatch_log_group" "codebuild_build" {
