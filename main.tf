@@ -23,8 +23,18 @@ variable "slack_channel_id" {
   type = string
 }
 
+
 data "aws_s3_bucket" "codepipeline_artifact" {
   bucket = var.s3_codepipeline_artifact_arn
+}
+
+import {
+  to = aws_cloudwatch_log_group.codebuild_build
+  id = "/aws/codebuild/TestDatasourceChatbotAndCodestar-Build"
+}
+
+resource "aws_cloudwatch_log_group" "codebuild_build" {
+  name = "/aws/codebuild/${var.identifier}-Build"
 }
 
 resource "aws_iam_role" "chatbot" {
@@ -134,7 +144,7 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "/aws/codebuild/${var.identifier}-*"
+      aws_cloudwatch_log_group.codebuild_build.arn
     ]
   }
 
