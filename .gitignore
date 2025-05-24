@@ -1,0 +1,4 @@
+**/.terraform/
+**/tfplan
+/state.config
+/.auto.tfvars.json
