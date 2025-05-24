@@ -41,7 +41,7 @@ resource "aws_iam_role" "chatbot" {
   assume_role_policy = data.aws_iam_policy_document.chatbot_assume_role_policy.json
 
   tags = {
-    Name = var.identifier
+    Service = var.identifier
   }
 }
 
@@ -61,7 +61,7 @@ resource "aws_iam_role" "codepipeline" {
   assume_role_policy = data.aws_iam_policy_document.codepipeline_assume_role_policy.json
 
   tags = {
-    Name = var.identifier
+    Service = var.identifier
   }
 }
 
@@ -123,6 +123,10 @@ resource "aws_iam_role_policy_attachment" "codepipeline" {
 resource "aws_iam_role" "codebuild" {
   name               = "${var.identifier}-CodeBuild"
   assume_role_policy = data.aws_iam_policy_document.codebuild_assume_role_policy.json
+
+  tags = {
+    Service = var.identifier
+  }
 }
 
 data "aws_iam_policy_document" "codebuild_assume_role_policy" {
@@ -204,6 +208,10 @@ artifacts:
   discard-paths: yes
 EOF
   }
+
+  tags = {
+    Service = var.identifier
+  }
 }
 
 // NOTE: You’ll need to replace this resource after the initial connection.
@@ -212,7 +220,7 @@ resource "aws_codestarconnections_connection" "github" {
   provider_type = "GitHub"
 
   tags = {
-    Name = var.identifier
+    Service = var.identifier
   }
 }
 
@@ -227,7 +235,7 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
   slack_team_id      = data.aws_chatbot_slack_workspace.workspace.slack_team_id
 
   tags = {
-    Name = var.identifier
+    Service = var.identifier
   }
 }
 
@@ -250,7 +258,9 @@ resource "aws_codestarnotifications_notification_rule" "codebuild" {
     address = aws_chatbot_slack_channel_configuration.channel.chat_configuration_arn
   }
 
-  tags = {}
+  tags = {
+    Service = var.identifier
+  }
 }
 
 resource "aws_codepipeline" "pipeline" {
@@ -299,5 +309,9 @@ resource "aws_codepipeline" "pipeline" {
         ProjectName = aws_codebuild_project.build.name
       }
     }
+  }
+
+  tags = {
+    Service = var.identifier
   }
 }
