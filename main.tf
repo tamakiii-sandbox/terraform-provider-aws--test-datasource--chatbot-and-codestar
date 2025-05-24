@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "codepipeline" {
       "codebuild:StartBuild"
     ]
     resources = [
-      "*" // TODO: fix me
+      aws_codebuild_project.build.arn,
     ]
   }
 
@@ -134,7 +134,7 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "*" # TODO: fix me: /aws/codebuild/TestDatasourceChatbotAndCodestar-Build
+      "/aws/codebuild/${var.identifier}-*"
     ]
   }
 
