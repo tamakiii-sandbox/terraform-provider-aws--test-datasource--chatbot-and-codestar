@@ -1,5 +1,7 @@
 terraform {
-  backend "s3" {}
+  backend "s3" {
+    # Backend configuration is provided via `state.config`.
+  }
 
   required_providers {
     aws = {
