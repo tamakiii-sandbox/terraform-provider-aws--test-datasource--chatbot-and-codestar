@@ -144,7 +144,8 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:PutLogEvents"
     ]
     resources = [
-      aws_cloudwatch_log_group.codebuild_build.arn
+      "${aws_cloudwatch_log_group.codebuild_build.arn}",
+      "${aws_cloudwatch_log_group.codebuild_build.arn}:*",
     ]
   }
 
