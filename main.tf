@@ -28,6 +28,8 @@ import {
   id = "/aws/codebuild/TestDatasourceChatbotAndCodestar-Build"
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_s3_bucket" "codepipeline_artifact" {
   bucket = var.s3_codepipeline_artifact_bucket
 }
@@ -239,6 +241,10 @@ resource "aws_chatbot_slack_channel_configuration" "channel" {
   }
 }
 
+data "aws_chatbot_slack_channel_configuration" "this" {
+  chat_configuration_arn = "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/TestDatasourceChatbotAndCodestar-Test"
+}
+
 resource "aws_codestarnotifications_notification_rule" "codebuild" {
   name        = "${var.identifier}-CodeBuild"
   detail_type = "BASIC"
@@ -314,4 +320,52 @@ resource "aws_codepipeline" "pipeline" {
   tags = {
     Service = var.identifier
   }
+}
+
+output "chat_configuration_arn" {
+  value = data.aws_chatbot_slack_channel_configuration.this.chat_configuration_arn
+}
+
+output "configuration_name" {
+  value = data.aws_chatbot_slack_channel_configuration.this.configuration_name
+}
+
+output "iam_role_arn" {
+  value = data.aws_chatbot_slack_channel_configuration.this.iam_role_arn
+}
+
+output "logging_level" {
+  value = data.aws_chatbot_slack_channel_configuration.this.logging_level
+}
+
+output "slack_channel_id" {
+  value = data.aws_chatbot_slack_channel_configuration.this.slack_channel_id
+}
+
+output "slack_channel_name" {
+  value = data.aws_chatbot_slack_channel_configuration.this.slack_channel_name
+}
+
+output "slack_team_id" {
+  value = data.aws_chatbot_slack_channel_configuration.this.slack_team_id
+}
+
+output "slack_team_name" {
+  value = data.aws_chatbot_slack_channel_configuration.this.slack_team_name
+}
+
+output "sns_topic_arns" {
+  value = data.aws_chatbot_slack_channel_configuration.this.sns_topic_arns
+}
+
+output "state" {
+  value = data.aws_chatbot_slack_channel_configuration.this.state
+}
+
+output "tags" {
+  value = data.aws_chatbot_slack_channel_configuration.this.tags
+}
+
+output "user_authorization_required" {
+  value = data.aws_chatbot_slack_channel_configuration.this.user_authorization_required
 }
