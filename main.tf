@@ -23,11 +23,6 @@ variable "slack_channel_id" {
   type = string
 }
 
-import {
-  to = aws_cloudwatch_log_group.codebuild_build
-  id = "/aws/codebuild/TestDatasourceChatbotAndCodestar-Build"
-}
-
 data "aws_s3_bucket" "codepipeline_artifact" {
   bucket = var.s3_codepipeline_artifact_bucket
 }
